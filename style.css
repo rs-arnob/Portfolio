@@ -198,44 +198,182 @@ header {
   50% { opacity: 0.4; transform: scale(0.85); }
 }
 
-nav ul {
+/* ===== HACKER CYBERDECK MATRIX NAVBAR (CONCEPT 1) ===== */
+.cyber-nav-deck {
   display: flex;
   list-style: none;
-  gap: 32px;
-}
-
-nav a.nav-link {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  font-family: var(--font-mono);
-  transition: color 0.3s ease;
+  align-items: center;
+  gap: 20px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
   position: relative;
-  padding: 6px 0;
-  letter-spacing: 0.3px;
 }
 
-nav a.nav-link:hover,
-nav a.nav-link.active {
+/* Nav Link Shell */
+.cyber-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s var(--ease-smooth);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Micro Index Tag (e.g., // SEC.01) */
+.nav-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 1.2px;
+  color: var(--text-dim);
+  opacity: 0.6;
+  margin-bottom: 2px;
+  transition: all 0.2s ease;
+}
+
+.cyber-nav-link:hover .nav-tag,
+.cyber-nav-link.active .nav-tag {
   color: var(--accent-green);
+  opacity: 1;
+  text-shadow: 0 0 8px var(--accent-green);
 }
 
-nav a.nav-link::after {
-  content: '';
+/* Nav Content with Brackets & Scramble Text */
+.nav-content {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+/* Cyber Brackets [ and ] */
+.cyber-bracket {
+  color: var(--accent-green);
+  opacity: 0;
+  transition: all 0.22s var(--ease-smooth);
+}
+
+.bracket-left {
+  transform: translateX(6px);
+}
+
+.bracket-right {
+  transform: translateX(-6px);
+}
+
+.cyber-nav-link:hover .cyber-bracket,
+.cyber-nav-link.active .cyber-bracket {
+  opacity: 1;
+  transform: translateX(0);
+  text-shadow: 0 0 10px var(--accent-green), 0 0 18px var(--accent-green);
+}
+
+/* Scramble Text Container */
+.scramble-text {
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.cyber-nav-link:hover .scramble-text {
+  color: #ffffff;
+  text-shadow: 0 0 10px var(--accent-green), 0 0 20px var(--accent-green);
+}
+
+.cyber-nav-link.active .scramble-text {
+  color: var(--accent-green);
+  text-shadow: 0 0 12px var(--accent-green), 0 0 24px var(--accent-green);
+}
+
+/* Glitch Matrix Character styling during scramble */
+.glitch-char {
+  color: var(--accent-cyan);
+  display: inline-block;
+  text-shadow: 0 0 8px var(--accent-cyan);
+  font-weight: 800;
+}
+
+/* CRT Scanline Sweep */
+.cyber-scanline {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent-green);
-  box-shadow: 0 0 8px var(--accent-green);
-  transition: width 0.3s var(--ease-smooth);
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(42, 252, 133, 0.22) 50%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
 }
 
-nav a.nav-link:hover::after,
-nav a.nav-link.active::after {
-  width: 100%;
+.cyber-nav-link:hover .cyber-scanline {
+  opacity: 1;
+  animation: scanlineSweep 0.75s linear infinite;
+}
+
+@keyframes scanlineSweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Hover & Active States (Clean typography without bounding boxes) */
+.cyber-nav-link:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.cyber-nav-link.active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Click / Hit: Terminal Execute Chromatic Glitch Flash */
+.cyber-nav-link.glitch-hit,
+.cyber-nav-link:active {
+  animation: matrixGlitch 0.38s ease-out forwards;
+  background: transparent !important;
+}
+
+@keyframes matrixGlitch {
+  0% {
+    transform: translate(0, 0);
+    text-shadow: 3px 0 #ff0055, -3px 0 #00f2fe;
+    filter: brightness(1.6);
+  }
+  20% {
+    transform: translate(-3px, 2px) skewX(-6deg);
+    text-shadow: -3px 0 #ff0055, 3px 0 #00f2fe;
+  }
+  40% {
+    transform: translate(3px, -2px) skewX(6deg);
+    text-shadow: 3px 0 #ff0055, -3px 0 #00f2fe;
+  }
+  60% {
+    transform: translate(-2px, 1px) skewX(-2deg);
+    text-shadow: -2px 0 #ff0055, 2px 0 #00f2fe;
+  }
+  80% {
+    transform: translate(1px, -1px);
+    text-shadow: 2px 0 var(--accent-green);
+  }
+  100% {
+    transform: translate(0, 0);
+    text-shadow: 0 0 14px var(--accent-green);
+    filter: brightness(1);
+  }
 }
 
 .menu-toggle {
@@ -1846,10 +1984,22 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 60px;
-    gap: 36px;
+    padding: 60px 20px 20px;
+    gap: 20px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
     transition: left 0.35s var(--ease-smooth);
     border-top: 1px solid var(--border-subtle);
+  }
+
+  nav a.nav-link,
+  .cyber-nav-link {
+    width: 80%;
+    max-width: 280px;
+    font-size: 1.05rem;
+    padding: 10px 20px;
   }
 
   nav ul.active {

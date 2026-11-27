@@ -267,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
      5. NAVIGATION SPY & SMOOTH SCROLLING
      ========================================================================== */
   const sections = document.querySelectorAll("section[id]");
-  const navLinks = document.querySelectorAll("nav ul li a");
+  const navLinks = document.querySelectorAll("nav ul li a, .cyber-nav-link");
 
   function highlightNavOnScroll() {
     const scrollY = window.pageYOffset;
@@ -289,6 +289,102 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   window.addEventListener("scroll", highlightNavOnScroll);
+
+  /* ==========================================================================
+     HACKER CYBERDECK MATRIX TEXT SCRAMBLER ENGINE (CONCEPT 1)
+     ========================================================================== */
+  const scrambleGlyphs = "!<>-_/[]{}*+=#$&%0123456789ABCDEF";
+
+  class MatrixScrambler {
+    constructor(element) {
+      this.el = element;
+      this.chars = scrambleGlyphs;
+      this.update = this.update.bind(this);
+    }
+
+    setText(newText) {
+      const oldText = this.el.innerText || newText;
+      const length = Math.max(oldText.length, newText.length);
+      const promise = new Promise(resolve => (this.resolve = resolve));
+      this.queue = [];
+
+      for (let i = 0; i < length; i++) {
+        const from = oldText[i] || "";
+        const to = newText[i] || "";
+        const start = Math.floor(Math.random() * 5);
+        const end = start + Math.floor(Math.random() * 7) + 3;
+        this.queue.push({ from, to, start, end, char: "" });
+      }
+
+      cancelAnimationFrame(this.frameRequest);
+      this.frame = 0;
+      this.update();
+      return promise;
+    }
+
+    update() {
+      let output = "";
+      let complete = 0;
+
+      for (let i = 0, n = this.queue.length; i < n; i++) {
+        let { from, to, start, end, char } = this.queue[i];
+
+        if (this.frame >= end) {
+          complete++;
+          output += to;
+        } else if (this.frame >= start) {
+          if (!char || Math.random() < 0.28) {
+            char = this.chars[Math.floor(Math.random() * this.chars.length)];
+            this.queue[i].char = char;
+          }
+          output += `<span class="glitch-char">${char}</span>`;
+        } else {
+          output += from;
+        }
+      }
+
+      this.el.innerHTML = output;
+
+      if (complete === this.queue.length) {
+        this.resolve();
+      } else {
+        this.frameRequest = requestAnimationFrame(this.update);
+        this.frame++;
+      }
+    }
+  }
+
+  // Bind scramble & terminal hit glitch to cyber nav links
+  const cyberNavLinks = document.querySelectorAll(".cyber-nav-link");
+  cyberNavLinks.forEach(link => {
+    const textSpan = link.querySelector(".scramble-text");
+    const targetText = link.getAttribute("data-text") || (textSpan ? textSpan.innerText : "");
+    if (!textSpan) return;
+
+    const scrambler = new MatrixScrambler(textSpan);
+
+    // Hover decode trigger
+    link.addEventListener("mouseenter", () => {
+      scrambler.setText(targetText);
+    });
+
+    // Hit / Click terminal glitch execution
+    link.addEventListener("click", () => {
+      link.classList.remove("glitch-hit");
+      void link.offsetWidth; // Force CSS reflow to re-trigger keyframe
+      link.classList.add("glitch-hit");
+
+      scrambler.setText(targetText);
+
+      setTimeout(() => {
+        link.classList.remove("glitch-hit");
+      }, 400);
+
+      // Immediately highlight clicked link
+      cyberNavLinks.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+    });
+  });
 
   // Smooth scroll with 80px fixed header offset
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
